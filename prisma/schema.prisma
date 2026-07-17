@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+  generator client {
+    provider = "prisma-client-js"
+  }
+
+  datasource db {
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
+  }
+
+
+  model User {
+    id        Int      @id @default(autoincrement())
+    firstName String
+    lastName  String
+    image     String?
+    role       String   @default("customer")
+    email     String    @unique
+    phone     String @unique
+    password  String
+    bookings  Booking[]
+    is_active  Boolean  @default(true)
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+  }
+
+  model Service {
+    id          Int      @id @default(autoincrement())
+    name        String
+    price       Int
+    description String
+    image       String?
+    duration    Int?     // durée en minutes
+    bookings    Booking[]
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+  }
+
+  model Booking {
+    id        Int      @id @default(autoincrement())
+    date      DateTime // date/heure du rendez-vous
+    userId    Int
+    serviceId Int
+    user      User     @relation(fields: [userId], references: [id])
+    service   Service  @relation(fields: [serviceId], references: [id])
+    status    String   @default("pending") // "pending", "confirmed", "cancelled"
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+  }
+
+  model CodeErreur {
+  id            Int    @id @default(autoincrement())
+  code          String @unique
+  signification String
+  message       String
+}
+
