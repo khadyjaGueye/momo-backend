@@ -38,11 +38,9 @@ async function getById(req, res) {
 async function create(req, res) {
   try {
     let imageUrl = null;
-
     if (req.file) {
       imageUrl = await uploadServiceImage(req.file);
     }
-
     const service = await serviceService.create({
       name: req.body.name,
       price: Number(req.body.price),
@@ -50,7 +48,6 @@ async function create(req, res) {
       duration: req.body.duration ? Number(req.body.duration) : null,
       image: imageUrl,
     });
-
     res.status(201).json({
       data: {
         "service": service

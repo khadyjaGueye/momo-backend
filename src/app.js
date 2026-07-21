@@ -9,9 +9,13 @@ app.use(express.json());
 const serviceRoute = require('./routes/services.route');
 const errorHandler = require('./middlewares/errorHandler.middleware');
 const codeErreurRoutes = require('./routes/codeErreur.route');
+const videoRoutes = require('./routes/video.route');
+const horaireRoutes = require('./routes/horaire.route');
 
 app.use('/api/services', serviceRoute);
 app.use('/api/code-erreurs', codeErreurRoutes);
+app.use('/api/videos',videoRoutes);
+app.use('/api/horaires', horaireRoutes);
 
 
 // middleware global d’erreurs (toujours à la fin)

@@ -60,3 +60,23 @@
   message       String
 }
 
+model Video {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  url         String 
+  createdAt   DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Horaire {
+  id        Int      @id @default(autoincrement())
+  jour      String   // exemple: "Lundi", "Mardi"
+  heureDebut String   // format HH:mm (ex: "08:00")
+  heureFin   String   // format HH:mm (ex: "17:00")
+  createdAt DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+
+

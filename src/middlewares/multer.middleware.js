@@ -9,33 +9,39 @@ const ensureDirExists = (dir) => {
     }
 };
 
+// Configuration du stockage sur disque
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        let folder = 'uploads/others';
-
-        // Choix du dossier selon la route
-        if (req.baseUrl.includes('/users')) {
-            folder = 'uploads/users';
-        } else if (req.baseUrl.includes('/products')) {
-            folder = 'uploads/products';
-        }
-
-        ensureDirExists(folder);
-        cb(null, folder);
+      const folder = 'uploads/videos';
+      if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true });
+      cb(null, folder);
     },
     filename: (req, file, cb) => {
-        const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
-        cb(null, uniqueName);
+      const uniqueName = Date.now() + '-' + file.originalname;
+      cb(null, uniqueName);
     }
-});
+  });
 
+// Filtre pour accepter uniquement certains formats vidéo
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const allowedTypes = [
+        'video/mp4',
+        'video/mpeg',
+        'video/ogg',
+        'video/webm',
+        'video/quicktime'
+    ];
     if (allowedTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {
-        cb(new Error('Format non autorisé'));
+        cb(new Error('Format vidéo non autorisé'));
     }
 };
 
-module.exports = multer({ storage, fileFilter });
+// Limite de taille (exemple : 50 Mo)
+const limits = {
+    fileSize: 50 * 1024 * 1024 // 50 MB
+};
+
+module.exports = multer({ storage, fileFilter, limits });
